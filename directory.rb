@@ -1,16 +1,16 @@
 # All the students are in an array
 students = [
-["Dr. Hannibal Lecter", :july],
-["Darth Vader", :july],
-["Nurse Ratched", :july],
-["Michael Corleone", :july],
-["Alex DeLarge", :july],
-["The Wicked Witch of the West", :july],
-["Terminator", :july],
-["Freddy Krueger", :july],
-["The Joker", :july],
-["Joffrey Baratheon", :july],
-["Norman Bates", :july]]
+{name: "Dr. Hannibal Lecter", cohort: :july},
+{name: "Darth Vader", cohort: :july},
+{name: "Nurse Ratched", cohort: :july},
+{name: "Michael Corleone", cohort: :july},
+{name: "Alex DeLarge", cohort: :july},
+{name: "The Wicked Witch of the West", cohort: :july},
+{name: "Terminator", cohort: :july},
+{name: "Freddy Krueger", cohort: :july},
+{name: "The Joker", cohort: :july},
+{name: "Joffrey Baratheon", cohort: :july},
+{name: "Norman Bates", cohort: :july}]
 
 def print_header
   puts "The students of Villains Academy"
@@ -20,7 +20,7 @@ end
 # Print the list of students
 def print(students)
   students.each do |student|
-    puts "#{student[0]} (#{student[1]} cohort)"
+    puts "#{student[:name]} (#{student[:cohort]} cohort)"
     end
 end
 
