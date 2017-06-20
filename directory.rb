@@ -24,9 +24,11 @@ end
 
 # Print the list of students
 def print(students)
-  students.each_with_index do |student, index|
-    puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
-    end
+  count = 0
+  while students.length > count
+    puts "#{count+1}, #{students[count][:name]} (#{students[count][:cohort]} cohort)"
+    count += 1
+  end
 end
 
 # And finally the total number
@@ -52,5 +54,5 @@ end
 
 students = input_students
 print_header
-select_by_length(students, 12)
+print(students)
 print_footer(students)
