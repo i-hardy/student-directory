@@ -24,8 +24,8 @@ end
 
 # Print the list of students
 def print(students)
-  students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  students.each_with_index do |student, index|
+    puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
 end
 
@@ -34,7 +34,15 @@ def print_footer(students)
   puts "Overall, we have #{students.count} great students."
 end
 
+def select_by_letter(students, letter)
+  students.each_with_index do |student, index|
+    if student[:name][0] == letter
+      puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
+  end
+end
+
 students = input_students
 print_header
-print(students)
+select_by_letter(students, "D")
 print_footer(students)
