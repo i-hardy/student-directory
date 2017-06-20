@@ -42,7 +42,15 @@ def select_by_letter(students, letter)
   end
 end
 
+def select_by_length(students, length)
+  students.each_with_index do |student, index|
+    if student[:name].length < length
+      puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
+  end
+end
+
 students = input_students
 print_header
-select_by_letter(students, "D")
+select_by_length(students, 12)
 print_footer(students)
