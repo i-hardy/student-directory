@@ -1,18 +1,32 @@
 def input_students
-  puts "Please enter the names of the students".center(75)
+  puts "Please enter a student's name".center(75)
   puts "To finish, just hit return twice".center(75)
   # Create an empty array
   students = []
   # Get the first name
   name = gets.chomp
+  # Ask for the cohort
+  puts "And what is their cohort?"
+  cohort = gets.chomp
+    if cohort.empty?
+      cohort = "july"
+    end
   # While loop to continue prompting for input
   while !name.empty? do
     # Add hash to the array for each student
-    students << {name: name, cohort: :july}
+    students << {name: name, cohort: cohort.to_sym}
     puts "Now we have #{students.count} students".center(75)
     # Get another name
     name = gets.chomp
+    # And another cohort
+    if !name.empty?
+      puts "And what is their cohort?"
+      cohort = gets.chomp
+      if cohort.empty?
+        cohort = "july"
+      end
     end
+  end
   #Return the array
   students
 end
