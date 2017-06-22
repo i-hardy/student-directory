@@ -14,7 +14,7 @@ def input_students
   # While loop to continue prompting for input
   while !name.empty? do
     # Add hash to the array for each student
-    students << {name: name, cohort: cohort.to_sym}
+    students << {name: name, cohort: cohort.downcase.to_sym}
     puts "Now we have #{students.count} students".center(75)
     # Get another name
     name = gets.chomp
@@ -66,7 +66,14 @@ def select_by_length(students, length)
   end
 end
 
+def print_by_cohort(students)
+  sorted = students.sort_by { |student| student[:cohort] }
+  sorted.each_with_index do |student, index|
+    puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)".center(75)
+  end
+end
+
 students = input_students
 print_header
-print(students)
+print_by_cohort(students)
 print_footer(students)
