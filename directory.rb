@@ -32,9 +32,11 @@ def input_students
   students
 end
 
-def print_header
-  puts "The students of Villains Academy".center(75)
-  puts "-------------".center(75)
+def print_header(students)
+  if students.count > 0
+    puts "The students of Villains Academy".center(75)
+    puts "-------------".center(75)
+  end
 end
 
 # Print the list of students
@@ -48,7 +50,9 @@ end
 
 # And finally the total number
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students.".center(75)
+  if students.count > 0
+    puts "Overall, we have #{students.count} great students.".center(75)
+  end
 end
 
 def select_by_letter(students, letter)
@@ -75,6 +79,6 @@ def print_by_cohort(students)
 end
 
 students = input_students
-print_header
+print_header(students)
 print_by_cohort(students)
 print_footer(students)
