@@ -1,17 +1,25 @@
+require "csv"
 @students = []
 
-def print_menu
-  puts "Please select from the following options:".center(75)
-  puts "1. Input students".center(75)
-  puts "2. Show the students".center(75)
-  puts "3. Save the list of students to a file".center(75)
-  puts "4. Load the list of students from a file".center(75)
-  puts "9. Exit".center(75)
+def center_puts(string)
+  puts string.center(75)
 end
 
-def show_students
+def print_menu
+  center_puts "Please select from the following options:"
+  center_puts "1. Input students"
+  center_puts "2. Show the students"
+  center_puts "3. Save the list of students to a file"
+  center_puts "4. Load the list of students from a file"
+  center_puts "5. Display students whose name begins with a given letter"
+  center_puts "6. Display students whose name is a given length"
+  center_puts "7. Display students sorted by cohort"
+  center_puts "9. Exit"
+end
+
+def show_students(printmethod)
   print_header
-  print_students_list
+  printmethod
   print_footer
 end
 
@@ -26,48 +34,48 @@ def process(selection)
     when "3"
       save_students
     when "4"
-      puts "What file do you want to load?".center(75)
+      center_puts "What file do you want to load?"
       filename = STDIN.gets.chomp
       load_students(filename)
     when "9"
       # Terminate the program
       exit
     else
-      puts "I don't know what you meant, please try again\n"
+      center_puts "I don't know what you meant, please try again\n"
   end
 end
 
 def save_students
-  puts "Please choose a filename".center(75)
+  center_puts "Please choose a filename"
   filename = STDIN.gets.chomp
   # Open the file for writing
-  file = File.open("#{filename}.csv", "w"){|file|
-  # Iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:animal], student[:height]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
-  end }
-  puts "File successfully saved".center(75)
+  CSV.open("#{filename}.csv", "w") do |csv|
+    @students.each do |student|
+      csv <<[student[:name], student[:cohort], student[:animal], student[:height]]
+    end
+  end
+  center_puts "File successfully saved\n"
 end
 
 def load_students(filename)
-  file = File.open(filename, "r"){|file|
-  file.readlines.each do |line|
-    @name, @cohort, @animal, @height = line.chomp.split(",")
+  if File.exists?(filename)
+    CSV.foreach(filename, "r") do |line|
+      @name, @cohort, @animal, @height = line
     create_students_array
-  end }
-  puts "File successfully opened".center(75)
+    end
+    center_puts "File successfully opened\n"
+  else
+    center_puts "Sorry, #{filename} doesn't exist"
+  end
 end
 
 def try_load_students
   filename = ARGV.first || "students.csv"
-  return if filename.nil?
   if File.exists?(filename)
     load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}".center(75)
+    center_puts "Loaded #{@students.count} from #{filename}"
   else
-    puts "Sorry, #{filename} doesn't exist".center(75)
+    center_puts "Sorry, #{filename} doesn't exist"
     exit
   end
 end
@@ -84,14 +92,14 @@ end
 def student_info
   @name = STDIN.gets.tr("\n", "")
   if !@name.empty?
-    puts "What is their cohort?"
+    center_puts "What is their cohort?"
     @cohort = STDIN.gets.tr("\n", "")
       if @cohort.empty?
         @cohort = "july"
       end
-    puts "What is their favourite animal?"
+    center_puts "What is their favourite animal?"
     @animal = STDIN.gets.tr("\n","")
-    puts "And how tall are they in centimetres?"
+    center_puts "And how tall are they in centimetres?"
     @height = STDIN.gets.tr("\n","").to_i
   end
 end
@@ -105,8 +113,8 @@ def plural_or_singular
 end
 
 def input_students
-  puts "Please enter a student's name".center(75)
-  puts "To finish, just hit return twice".center(75)
+  center_puts "Please enter a student's name"
+  center_puts "To finish, just hit return twice"
   # Call the student_info method to get initial input
   student_info
   # While loop to continue prompting for input
@@ -114,7 +122,7 @@ def input_students
     # Add hash to the array for each student
     create_students_array
     plural_or_singular
-    puts "Now we have #{@students.count} #{@plural}".center(75)
+    center_puts "Now we have #{@students.count} #{@plural}"
     # Get another student
     student_info
   end
@@ -124,8 +132,8 @@ end
 
 def print_header
   if @students.count > 0
-    puts "The students of Villains Academy".center(75)
-    puts "-------------".center(75)
+    center_puts "The students of Villains Academy"
+    center_puts "-------------"
   end
 end
 
@@ -133,7 +141,7 @@ end
 def print_students_list
   count = 0
   while @students.length > count
-    puts "#{count+1}. #{@students[count][:name]} (#{@students[count][:cohort]} cohort)".center(75)
+    center_puts "#{count+1}. #{@students[count][:name]} (#{@students[count][:cohort]} cohort)"
     count += 1
   end
 end
@@ -142,14 +150,14 @@ end
 def print_footer
   plural_or_singular
   if @students.count > 0
-    puts "Overall, we have #{@students.count} great #{@plural}.\n".center(75)
+    center_puts "Overall, we have #{@students.count} great #{@plural}.\n"
   end
 end
 
 def select_by_letter(letter)
   @students.each_with_index do |student, index|
     if @student[:name][0] == letter
-      puts "#{index+1}. #{@student[:name]} (#{@student[:cohort]} cohort)".center(75)
+      center_puts "#{index+1}. #{@student[:name]} (#{@student[:cohort]} cohort)"
     end
   end
 end
@@ -157,7 +165,7 @@ end
 def select_by_length(length)
   @students.each_with_index do |student, index|
     if student[:name].length < length
-      puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)".center(75)
+      center_puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
   end
 end
@@ -165,7 +173,7 @@ end
 def print_by_cohort
   sorted = @students.sort_by { |student| student[:cohort] }
   sorted.each_with_index do |student, index|
-    puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)".center(75)
+    center_puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
