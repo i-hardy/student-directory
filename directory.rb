@@ -1,31 +1,32 @@
+def student_info
+  @name = gets.tr("\n", "")
+  puts "What is their cohort?"
+  @cohort = gets.tr("\n", "")
+    if @cohort.empty?
+      @cohort = "july"
+    end
+  puts "What is their favourite animal?"
+  @animal = gets.tr("\n","")
+  puts "And how tall are they in centimetres?"
+  @height = gets.tr("\n","").to_i
+end
+
 def input_students
   puts "Please enter a student's name".center(75)
   puts "To finish, just hit return twice".center(75)
   # Create an empty array
   students = []
-  # Get the first name
-  name = gets.chomp
-  # Ask for the cohort
-  puts "And what is their cohort?"
-  cohort = gets.chomp
-    if cohort.empty?
-      cohort = "july"
-    end
+  # Call the student_info method to get initial input
+  student_info
   # While loop to continue prompting for input
-  while !name.empty? do
+  while !@name.empty? do
     # Add hash to the array for each student
-    students << {name: name, cohort: cohort.downcase.to_sym}
-    puts "Now we have #{students.count} students".center(75)
-    # Get another name
-    name = gets.chomp
-    # And another cohort
-    if !name.empty?
-      puts "And what is their cohort?"
-      cohort = gets.chomp
-      if cohort.empty?
-        cohort = "july"
-      end
-    end
+    students << {name: @name, cohort: @cohort.downcase.to_sym, animal: @animal, height: @height}
+    plural = ("student" if students.count == 1 ) || ("students")
+    puts "Now we have #{students.count} #{plural}".center(75)
+    # Get another student
+    student_info
+    break if @name.empty?
   end
   #Return the array
   students
