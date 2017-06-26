@@ -4,6 +4,7 @@ def print_menu
   puts "Please select from the following options:".center(75)
   puts "1. Input students".center(75)
   puts "2. Show the students".center(75)
+  puts "3. Save the list of students to students.csv"
   puts "9. Exit".center(75)
 end
 
@@ -21,12 +22,26 @@ def process(selection)
     when "2"
       # Show the students
       show_students
+    when "3"
+      save_students
     when "9"
       # Terminate the program
       exit
     else
       puts "I don't know what you meant, please try again\n"
   end
+end
+
+def save_students
+  # Open the file for writing
+  file = File.open("students.csv", "w")
+  # Iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort], student[:animal], student[:height]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
 
 def interactive_menu
