@@ -1,14 +1,46 @@
+def interactive_menu
+  students = []
+  loop do
+    # Print the menu and ask the user what to do
+    puts "Please select from the following options:"
+    puts "1. Input students"
+    puts "2. Show the students"
+    puts "9. Exit"
+    # Read the input and save it into a variable
+    selection = gets.chomp
+    # Do what the user has asked
+    case selection
+      when "1"
+        # Input the students
+        students = input_students
+      when "2"
+        # Show the students
+        print_header(students)
+        print(students)
+        print_footer(students)
+      when "9"
+        # Terminate the program
+        exit
+      else
+        "I don't know what you meant, please try again"
+    # Repeat
+    end
+  end
+end
+
 def student_info
   @name = gets.tr("\n", "")
-  puts "What is their cohort?"
-  @cohort = gets.tr("\n", "")
-    if @cohort.empty?
-      @cohort = "july"
-    end
-  puts "What is their favourite animal?"
-  @animal = gets.tr("\n","")
-  puts "And how tall are they in centimetres?"
-  @height = gets.tr("\n","").to_i
+  if !@name.empty?
+    puts "What is their cohort?"
+    @cohort = gets.tr("\n", "")
+      if @cohort.empty?
+        @cohort = "july"
+      end
+    puts "What is their favourite animal?"
+    @animal = gets.tr("\n","")
+    puts "And how tall are they in centimetres?"
+    @height = gets.tr("\n","").to_i
+  end
 end
 
 def input_students
@@ -26,7 +58,6 @@ def input_students
     puts "Now we have #{students.count} #{plural}".center(75)
     # Get another student
     student_info
-    break if @name.empty?
   end
   #Return the array
   students
@@ -78,7 +109,4 @@ def print_by_cohort(students)
   end
 end
 
-students = input_students
-print_header(students)
-print_by_cohort(students)
-print_footer(students)
+interactive_menu
