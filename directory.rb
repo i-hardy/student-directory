@@ -26,7 +26,7 @@ def process(selection)
     when "3"
       save_students
     when "4"
-      puts "What file do you want to load?"
+      puts "What file do you want to load?".center(75)
       filename = STDIN.gets.chomp
       load_students(filename)
     when "9"
@@ -38,27 +38,25 @@ def process(selection)
 end
 
 def save_students
-  puts "Please choose a filename"
+  puts "Please choose a filename".center(75)
   filename = STDIN.gets.chomp
   # Open the file for writing
-  file = File.open("#{filename}.csv", "w")
+  file = File.open("#{filename}.csv", "w"){|file|
   # Iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort], student[:animal], student[:height]]
     csv_line = student_data.join(",")
     file.puts csv_line
-  end
-  file.close
+  end }
   puts "File successfully saved".center(75)
 end
 
 def load_students(filename)
-  file = File.open(filename, "r")
+  file = File.open(filename, "r"){|file|
   file.readlines.each do |line|
     @name, @cohort, @animal, @height = line.chomp.split(",")
     create_students_array
-  end
-  file.close
+  end }
   puts "File successfully opened".center(75)
 end
 
