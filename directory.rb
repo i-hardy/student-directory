@@ -47,13 +47,25 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
-    name, cohort, animal, height = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym, animal: animal, height: height.to_i}
+    @name, @cohort, @animal, @height = line.chomp.split(",")
+    create_students_array
   end
   file.close
+end
+
+def try_load_students
+  filename = ARGV.first || "students.csv"
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}".center(75)
+  else
+    puts "Sorry, #{filename} doesn't exist".center(75)
+    exit
+  end
 end
 
 def interactive_menu
@@ -61,23 +73,31 @@ def interactive_menu
     # Print the menu and ask the user what to do
     print_menu
     # Do what the user has asked
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
 def student_info
-  @name = gets.tr("\n", "")
+  @name = STDIN.gets.tr("\n", "")
   if !@name.empty?
     puts "What is their cohort?"
-    @cohort = gets.tr("\n", "")
+    @cohort = STDIN.gets.tr("\n", "")
       if @cohort.empty?
         @cohort = "july"
       end
     puts "What is their favourite animal?"
-    @animal = gets.tr("\n","")
+    @animal = STDIN.gets.tr("\n","")
     puts "And how tall are they in centimetres?"
-    @height = gets.tr("\n","").to_i
+    @height = STDIN.gets.tr("\n","").to_i
   end
+end
+
+def create_students_array
+  @students << {name: @name, cohort: @cohort.downcase.to_sym, animal: @animal, height: @height}
+end
+
+def plural_or_singular
+  @plural = ("student" if @students.count == 1) || ("students")
 end
 
 def input_students
@@ -88,9 +108,9 @@ def input_students
   # While loop to continue prompting for input
   while !@name.empty? do
     # Add hash to the array for each student
-    @students << {name: @name, cohort: @cohort.downcase.to_sym, animal: @animal, height: @height}
-    plural = ("student" if @students.count == 1 ) || ("students")
-    puts "Now we have #{@students.count} #{plural}".center(75)
+    create_students_array
+    plural_or_singular
+    puts "Now we have #{@students.count} #{@plural}".center(75)
     # Get another student
     student_info
   end
@@ -116,9 +136,9 @@ end
 
 # And finally the total number
 def print_footer
-  plural = ("student" if @students.count == 1 ) || ("students")
+  plural_or_singular
   if @students.count > 0
-    puts "Overall, we have #{@students.count} great #{plural}.\n".center(75)
+    puts "Overall, we have #{@students.count} great #{@plural}.\n".center(75)
   end
 end
 
@@ -145,4 +165,5 @@ def print_by_cohort
   end
 end
 
+try_load_students
 interactive_menu
