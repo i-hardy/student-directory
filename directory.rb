@@ -12,14 +12,15 @@ def print_menu
   center_puts "3. Save the list of students to a file"
   center_puts "4. Load the list of students from a file"
   center_puts "5. Display students whose name begins with a given letter"
-  center_puts "6. Display students whose name is a given length"
+  center_puts "6. Display students whose name is up to a given length"
   center_puts "7. Display students sorted by cohort"
+  center_puts "8. Delete an existing file"
   center_puts "9. Exit"
 end
 
-def show_students(printmethod)
+def show_students( printmethod, *param)
   print_header
-  printmethod
+  printmethod.call(param)
   print_footer
 end
 
@@ -30,13 +31,23 @@ def process(selection)
       students = input_students
     when "2"
       # Show the students
-      show_students
+      show_students(method (:print_students_list))
     when "3"
       save_students
     when "4"
       center_puts "What file do you want to load?"
       filename = STDIN.gets.chomp
       load_students(filename)
+    when "5"
+      center_puts "What letter do you want to select for?"
+      show_students( method(:select_by_letter), gets.chomp)
+    when "6"
+      center_puts "What length of name do you want to select for?"
+      show_students(method (:select_by_length), gets.chomp.to_i)
+    when "7"
+      show_students(method (:print_by_cohort))
+    when "8"
+      delete_file
     when "9"
       # Terminate the program
       exit
@@ -77,6 +88,19 @@ def try_load_students
   else
     center_puts "Sorry, #{filename} doesn't exist"
     exit
+  end
+end
+
+def delete_file
+  center_puts "Please state the file you want to delete"
+  filename = gets.chomp
+  if File.exists?(filename)
+    center_puts "Are you sure?"
+      if gets.chomp.downcase == "yes"
+        File.delete(filename)
+      end
+  else
+    center_puts "That file does not exist\n"
   end
 end
 
@@ -138,7 +162,7 @@ def print_header
 end
 
 # Print the list of students
-def print_students_list
+def print_students_list(*)
   count = 0
   while @students.length > count
     center_puts "#{count+1}. #{@students[count][:name]} (#{@students[count][:cohort]} cohort)"
@@ -156,8 +180,8 @@ end
 
 def select_by_letter(letter)
   @students.each_with_index do |student, index|
-    if @student[:name][0] == letter
-      center_puts "#{index+1}. #{@student[:name]} (#{@student[:cohort]} cohort)"
+    if student[:name][0].downcase == letter.downcase
+      center_puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
   end
 end
@@ -170,7 +194,7 @@ def select_by_length(length)
   end
 end
 
-def print_by_cohort
+def print_by_cohort(*)
   sorted = @students.sort_by { |student| student[:cohort] }
   sorted.each_with_index do |student, index|
     center_puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
