@@ -4,8 +4,8 @@ def print_menu
   puts "Please select from the following options:".center(75)
   puts "1. Input students".center(75)
   puts "2. Show the students".center(75)
-  puts "3. Save the list of students to students.csv".center(75)
-  puts "4. Load the list of students from students.csv".center(75)
+  puts "3. Save the list of students to a file".center(75)
+  puts "4. Load the list of students from a file".center(75)
   puts "9. Exit".center(75)
 end
 
@@ -26,7 +26,9 @@ def process(selection)
     when "3"
       save_students
     when "4"
-      load_students
+      puts "What file do you want to load?"
+      filename = STDIN.gets.chomp
+      load_students(filename)
     when "9"
       # Terminate the program
       exit
@@ -36,8 +38,10 @@ def process(selection)
 end
 
 def save_students
+  puts "Please choose a filename"
+  filename = STDIN.gets.chomp
   # Open the file for writing
-  file = File.open("students.csv", "w")
+  file = File.open("#{filename}.csv", "w")
   # Iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort], student[:animal], student[:height]]
@@ -45,15 +49,17 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "File successfully saved".center(75)
 end
 
-def load_students(filename = "students.csv")
+def load_students(filename)
   file = File.open(filename, "r")
   file.readlines.each do |line|
     @name, @cohort, @animal, @height = line.chomp.split(",")
     create_students_array
   end
   file.close
+  puts "File successfully opened".center(75)
 end
 
 def try_load_students
